@@ -1,0 +1,50 @@
+{
+    "name": "vendor/iorder",
+    "description": "",
+    "type": "asgard-module",
+    "license": "MIT",
+    "require": {
+        "php": "^7.1.3",
+        "composer/installers": "~1.0",
+        "idavoll/core-module": "v8.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "orchestra/testbench": "3.8.*"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Iorder\\": ".",
+            "Modules\\": "Modules/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Iorder\\": "",
+            "Modules\\Iorder\\App\\": "app/",
+            "Modules\\Iorder\\Database\\Factories\\": "database/factories/",
+            "Modules\\Iorder\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Iorder\\Tests\\": "tests/"
+        }
+    }
+}

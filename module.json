@@ -1,0 +1,14 @@
+{
+    "name": "Iorder",
+    "alias": "iorder",
+    "version": "1.0.0",
+	"description": "",
+    "keywords": [],
+    "priority": 1,
+    "providers": [
+        "Modules\\Iorder\\Providers\\IorderServiceProvider",
+        "Modules\\Iorder\\Providers\\EventServiceProvider",
+        "Modules\\Iorder\\Providers\\RouteServiceProvider"
+    ],
+    "files": []
+}
