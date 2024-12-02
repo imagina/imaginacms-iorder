@@ -14,7 +14,8 @@ return new class extends Migration {
     Schema::create('iorder__orderitems', function (Blueprint $table) {
       $table->engine = 'InnoDB';
       $table->increments('id');
-      $table->integer('order_id')->nullable();
+      $table->integer('order_id')->unsigned()->nullable();
+      $table->foreign('order_id')->references('id')->on('iorder__orders')->onDelete('cascade');
       $table->string('entity_type')->nullable();
       $table->integer('entity_id')->nullable();
       $table->string('title')->nullable();
@@ -38,6 +39,9 @@ return new class extends Migration {
    */
   public function down()
   {
+    Schema::table('iorder__orderitems', function (Blueprint $table) {
+      $table->dropForeign(['order_id']);
+    });
     Schema::dropIfExists('iorder__orderitems');
   }
 };
