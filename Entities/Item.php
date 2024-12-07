@@ -2,20 +2,17 @@
 
 namespace Modules\Iorder\Entities;
 
-use Astrotomic\Translatable\Translatable;
 use Modules\Core\Icrud\Entities\CrudModel;
 
-class OrderItem extends CrudModel
+class Item extends CrudModel
 {
-  use Translatable;
-
-  protected $table = 'iorder__orderitems';
-  public $transformer = 'Modules\Iorder\Transformers\OrderItemTransformer';
-  public $repository = 'Modules\Iorder\Repositories\OrderItemRepository';
+  protected $table = 'iorder__items';
+  public $transformer = 'Modules\Iorder\Transformers\ItemTransformer';
+  public $repository = 'Modules\Iorder\Repositories\ItemRepository';
   public $requestValidation = [
-      'create' => 'Modules\Iorder\Http\Requests\CreateOrderItemRequest',
-      'update' => 'Modules\Iorder\Http\Requests\UpdateOrderItemRequest',
-    ];
+    'create' => 'Modules\Iorder\Http\Requests\CreateItemRequest',
+    'update' => 'Modules\Iorder\Http\Requests\UpdateItemRequest',
+  ];
   //Instance external/internal events to dispatch with extraData
   public $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
@@ -26,11 +23,11 @@ class OrderItem extends CrudModel
     'deleting' => [],
     'deleted' => []
   ];
-  public $translatedAttributes = [];
   protected $fillable = [
     'order_id',
     'entity_type',
     'entity_id',
+    'status_id',
     'quantity',
     'price',
     'total',
@@ -39,4 +36,20 @@ class OrderItem extends CrudModel
     'title',
     'extra_data'
   ];
+
+  public function getStatusAttribute()
+  {
+    $status = new Status();
+    return $status->show($this->status_id);
+  }
+
+  public function order()
+  {
+    $this->belongsTo(Order::class);
+  }
+
+  public function suppliers()
+  {
+    $this->hasMany(Supply::class);
+  }
 }

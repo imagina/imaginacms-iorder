@@ -2,20 +2,17 @@
 
 namespace Modules\Iorder\Entities;
 
-use Astrotomic\Translatable\Translatable;
 use Modules\Core\Icrud\Entities\CrudModel;
 
 class Order extends CrudModel
 {
-  use Translatable;
-
   protected $table = 'iorder__orders';
   public $transformer = 'Modules\Iorder\Transformers\OrderTransformer';
   public $repository = 'Modules\Iorder\Repositories\OrderRepository';
   public $requestValidation = [
-      'create' => 'Modules\Iorder\Http\Requests\CreateOrderRequest',
-      'update' => 'Modules\Iorder\Http\Requests\UpdateOrderRequest',
-    ];
+    'create' => 'Modules\Iorder\Http\Requests\CreateOrderRequest',
+    'update' => 'Modules\Iorder\Http\Requests\UpdateOrderRequest',
+  ];
   //Instance external/internal events to dispatch with extraData
   public $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
@@ -26,7 +23,6 @@ class Order extends CrudModel
     'deleting' => [],
     'deleted' => []
   ];
-  public $translatedAttributes = [];
   protected $fillable = [
     'total',
     'status_id',
@@ -57,4 +53,21 @@ class Order extends CrudModel
     'shipping_name',
     'type'
   ];
+
+  public function getTypeAttribute()
+  {
+    $type = new Type();
+    return $type->show($this->type_id);
+  }
+
+  public function getStatusAttribute()
+  {
+    $status = new Status();
+    return $status->show($this->status_id);
+  }
+
+  public function items()
+  {
+    $this->hasMany(Item::class);
+  }
 }

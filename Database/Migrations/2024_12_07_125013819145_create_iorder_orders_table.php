@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Modules\Iorder\Entities\Type;
+use Modules\Iorder\Entities\Status;
 
 return new class extends Migration {
   /**
@@ -14,10 +16,12 @@ return new class extends Migration {
     Schema::create('iorder__orders', function (Blueprint $table) {
       $table->engine = 'InnoDB';
       $table->increments('id');
-
+      // Your fields...
+      $table->integer('type_id')->default(Type::SHOP);
+      $table->integer('status_id')->default(Status::ORDER_PENDING);
       $table->float('total', 50, 2)->default(0);
-      $table->integer('status_id')->nullable();
-      $table->integer('customer_id')->nullable();
+      $table->integer('customer_id')->unsigned()->nullable();
+      $table->foreign('customer_id')->references('id')->on('users');
       $table->string('customer_first_name')->nullable();
       $table->string('customer_last_name')->nullable();
       $table->string('customer_email')->nullable();
@@ -40,8 +44,7 @@ return new class extends Migration {
       $table->string('shipping_amount')->nullable();
       $table->string('shipping_extra_data')->nullable();
       $table->string('currency')->nullable();
-      $table->string('options')->nullable();
-      $table->string('type')->nullable();
+      $table->text('options')->nullable();
 
       // Audit fields
       $table->timestamps();

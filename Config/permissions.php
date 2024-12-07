@@ -9,21 +9,21 @@ return [
         'destroy' => 'iorder::orders.destroy resource',
         'restore' => 'iorder::orders.restore resource',
     ],
-    'iorder.orderitems' => [
-        'manage' => 'iorder::orderitems.manage resource',
-        'index' => 'iorder::orderitems.list resource',
-        'create' => 'iorder::orderitems.create resource',
-        'edit' => 'iorder::orderitems.edit resource',
-        'destroy' => 'iorder::orderitems.destroy resource',
-        'restore' => 'iorder::orderitems.restore resource',
+    'iorder.items' => [
+        'manage' => 'iorder::items.manage resource',
+        'index' => 'iorder::items.list resource',
+        'create' => 'iorder::items.create resource',
+        'edit' => 'iorder::items.edit resource',
+        'destroy' => 'iorder::items.destroy resource',
+        'restore' => 'iorder::items.restore resource',
     ],
-    'iorder.orderitemoptions' => [
-        'manage' => 'iorder::orderitemoptions.manage resource',
-        'index' => 'iorder::orderitemoptions.list resource',
-        'create' => 'iorder::orderitemoptions.create resource',
-        'edit' => 'iorder::orderitemoptions.edit resource',
-        'destroy' => 'iorder::orderitemoptions.destroy resource',
-        'restore' => 'iorder::orderitemoptions.restore resource',
+    'iorder.supplies' => [
+        'manage' => 'iorder::supplies.manage resource',
+        'index' => 'iorder::supplies.list resource',
+        'create' => 'iorder::supplies.create resource',
+        'edit' => 'iorder::supplies.edit resource',
+        'destroy' => 'iorder::supplies.destroy resource',
+        'restore' => 'iorder::supplies.restore resource',
     ],
 // append
 

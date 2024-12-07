@@ -74,27 +74,27 @@ class IorderServiceProvider extends ServiceProvider
             }
         );
         $this->app->bind(
-            'Modules\Iorder\Repositories\OrderItemRepository',
+            'Modules\Iorder\Repositories\ItemRepository',
             function () {
-                $repository = new \Modules\Iorder\Repositories\Eloquent\EloquentOrderItemRepository(new \Modules\Iorder\Entities\OrderItem());
+                $repository = new \Modules\Iorder\Repositories\Eloquent\EloquentItemRepository(new \Modules\Iorder\Entities\Item());
 
                 if (! config('app.cache')) {
                     return $repository;
                 }
 
-                return new \Modules\Iorder\Repositories\Cache\CacheOrderItemDecorator($repository);
+                return new \Modules\Iorder\Repositories\Cache\CacheItemDecorator($repository);
             }
         );
         $this->app->bind(
-            'Modules\Iorder\Repositories\OrderItemOptionsRepository',
+            'Modules\Iorder\Repositories\SupplyRepository',
             function () {
-                $repository = new \Modules\Iorder\Repositories\Eloquent\EloquentOrderItemOptionsRepository(new \Modules\Iorder\Entities\OrderItemOptions());
+                $repository = new \Modules\Iorder\Repositories\Eloquent\EloquentSupplyRepository(new \Modules\Iorder\Entities\Supply());
 
                 if (! config('app.cache')) {
                     return $repository;
                 }
 
-                return new \Modules\Iorder\Repositories\Cache\CacheOrderItemOptionsDecorator($repository);
+                return new \Modules\Iorder\Repositories\Cache\CacheSupplyDecorator($repository);
             }
         );
 // add bindings

@@ -4,7 +4,7 @@ namespace Modules\Iorder\Transformers;
 
 use Modules\Core\Icrud\Transformers\CrudResource;
 
-class OrderItemOptionsTransformer extends CrudResource
+class SupplyTransformer extends CrudResource
 {
   /**
    * Attribute to exclude relations from transformed data

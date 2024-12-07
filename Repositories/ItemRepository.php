@@ -4,6 +4,6 @@ namespace Modules\Iorder\Repositories;
 
 use Modules\Core\Icrud\Repositories\BaseCrudRepository;
 
-interface OrderItemRepository extends BaseCrudRepository
+interface ItemRepository extends BaseCrudRepository
 {
 }

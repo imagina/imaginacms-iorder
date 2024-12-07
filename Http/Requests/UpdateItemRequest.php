@@ -4,7 +4,7 @@ namespace Modules\Iorder\Http\Requests;
 
 use Modules\Core\Internationalisation\BaseFormRequest;
 
-class CreateOrderItemRequest extends BaseFormRequest
+class UpdateItemRequest extends BaseFormRequest
 {
     public function rules()
     {
@@ -34,5 +34,4 @@ class CreateOrderItemRequest extends BaseFormRequest
     public function getValidator(){
         return $this->getValidatorInstance();
     }
-    
 }

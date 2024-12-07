@@ -2,10 +2,10 @@
 
 namespace Modules\Iorder\Repositories\Eloquent;
 
-use Modules\Iorder\Repositories\OrderItemRepository;
+use Modules\Iorder\Repositories\ItemRepository;
 use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 
-class EloquentOrderItemRepository extends EloquentCrudRepository implements OrderItemRepository
+class EloquentItemRepository extends EloquentCrudRepository implements ItemRepository
 {
   /**
    * Filter names to replace
