@@ -20,7 +20,7 @@ return new class extends Migration {
       $table->integer('type_id')->default(Type::SHOP);
       $table->integer('status_id')->default(Status::ORDER_PENDING);
       $table->float('total', 50, 2)->default(0);
-      $table->integer('customer_id')->unsigned()->nullable();
+      $table->integer('customer_id')->unsigned();
       $table->foreign('customer_id')->references('id')->on('users');
       $table->string('customer_first_name')->nullable();
       $table->string('customer_last_name')->nullable();

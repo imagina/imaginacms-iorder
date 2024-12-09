@@ -8,7 +8,7 @@ class CreateOrderRequest extends BaseFormRequest
 {
     public function rules()
     {
-        return [];
+        return ['customer_id' => 'required',];
     }
 
     public function translationRules()

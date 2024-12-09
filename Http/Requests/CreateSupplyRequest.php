@@ -13,7 +13,10 @@ class CreateSupplyRequest extends BaseFormRequest
 
     public function translationRules()
     {
-        return [];
+        return [
+          'item_id' => 'required',
+          'supplier_id' => 'required'
+        ];
     }
 
     public function authorize()

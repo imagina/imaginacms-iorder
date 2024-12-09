@@ -8,7 +8,11 @@ class CreateItemRequest extends BaseFormRequest
 {
     public function rules()
     {
-        return [];
+        return [
+          'order_id' => 'required',
+          'entity_type' => 'required',
+          'entity_id' => 'required',
+        ];
     }
 
     public function translationRules()
