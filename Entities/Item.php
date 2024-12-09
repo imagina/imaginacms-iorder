@@ -50,6 +50,6 @@ class Item extends CrudModel
 
   public function suppliers()
   {
-    $this->hasMany(Supply::class);
+    return $this->hasMany(Supply::class);
   }
 }
