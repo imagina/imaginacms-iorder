@@ -42,6 +42,13 @@ class Supply extends CrudModel
 
   public function item()
   {
-    $this->belongsTo(Item::class);
+    return $this->belongsTo(Item::class);
+  }
+
+  public function supplier()
+  {
+    $driver = config('asgard.user.config.driver');
+
+    return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'supplier_id');
   }
 }

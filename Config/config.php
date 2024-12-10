@@ -34,4 +34,12 @@ return [
       ]
     ]
   ],
+
+  'exportable' => [
+    'orders' => [
+      'moduleName' => 'Iorder',
+      'fileName' => 'Orders Supply',
+      'exportName' => 'OrderItemsExport',
+    ]
+  ],
 ];
