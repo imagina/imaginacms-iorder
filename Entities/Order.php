@@ -13,6 +13,12 @@ class Order extends CrudModel
     'create' => 'Modules\Iorder\Http\Requests\CreateOrderRequest',
     'update' => 'Modules\Iorder\Http\Requests\UpdateOrderRequest',
   ];
+  public $modelRelations = [
+    'items' => [
+      'type' => 'updateOrCreateMany',
+      'compareKeys' => ['entity_type','entity_id']
+    ]
+  ];
   //Instance external/internal events to dispatch with extraData
   public $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
@@ -68,6 +74,6 @@ class Order extends CrudModel
 
   public function items()
   {
-    $this->hasMany(Item::class);
+    return $this->hasMany(Item::class);
   }
 }

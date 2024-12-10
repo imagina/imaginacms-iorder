@@ -13,6 +13,12 @@ class Item extends CrudModel
     'create' => 'Modules\Iorder\Http\Requests\CreateItemRequest',
     'update' => 'Modules\Iorder\Http\Requests\UpdateItemRequest',
   ];
+  public $modelRelations = [
+    'suppliers' => [
+      'type' => 'updateOrCreateMany',
+      'compareKeys' => ['supplier_id']
+    ]
+  ];
   //Instance external/internal events to dispatch with extraData
   public $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
