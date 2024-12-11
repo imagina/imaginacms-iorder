@@ -47,6 +47,7 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
      *
      */
 
+    $this->validateIndexAllPermission($query, $params);
     //Response
     return $query;
   }
@@ -74,5 +75,21 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
 
     //Response
     return $model;
+  }
+
+  function validateIndexAllPermission(&$query, $params)
+  {
+
+    if (!isset($params->permissions['iorder.supplies.index-all']) ||
+      (isset($params->permissions['iorder.supplies.index-all']) &&
+        !$params->permissions['iorder.supplies.index-all'])) {
+      $user = $params->user ?? null;
+
+      if (isset($user->id)) {
+        // if is salesman or salesman manager or salesman sub manager
+        $query->where('supplier_id', $user->id);
+
+      }
+    }
   }
 }

@@ -4,6 +4,7 @@ return [
     'iorder.orders' => [
         'manage' => 'iorder::orders.manage resource',
         'index' => 'iorder::orders.list resource',
+        'index-all' => 'iorder::orders.list resource',
         'create' => 'iorder::orders.create resource',
         'edit' => 'iorder::orders.edit resource',
         'destroy' => 'iorder::orders.destroy resource',
@@ -12,6 +13,7 @@ return [
     'iorder.items' => [
         'manage' => 'iorder::items.manage resource',
         'index' => 'iorder::items.list resource',
+        'index-all' => 'iorder::items.list resource',
         'create' => 'iorder::items.create resource',
         'edit' => 'iorder::items.edit resource',
         'destroy' => 'iorder::items.destroy resource',
@@ -20,6 +22,7 @@ return [
     'iorder.supplies' => [
         'manage' => 'iorder::supplies.manage resource',
         'index' => 'iorder::supplies.list resource',
+        'index-all' => 'iorder::supplies.list resource',
         'create' => 'iorder::supplies.create resource',
         'edit' => 'iorder::supplies.edit resource',
         'destroy' => 'iorder::supplies.destroy resource',
