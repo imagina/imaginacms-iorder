@@ -120,7 +120,7 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
       // Set attributes for the current model
       $data['price'] = $price;
       $data['total'] = $quantity * $price;
-      $data['extra_data'] = json_encode($model->toArray());
+      $data['extra_data'] = $model->toArray();
       $data['title'] = $model->title ?? $model->name ?? null;
 
       $suppliers = $data['suppliers'] ?? [];
