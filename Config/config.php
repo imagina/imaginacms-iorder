@@ -11,12 +11,14 @@ return [
         'apiRoute' => '/iorder/v3/orders',
         "supportedActions" =>  ["import"],
         'sheetName' => 'Orders',
-        'include' => '',
         'customColumns' => true,
         'dependencies' => [
           'iorder_syncProvider' => [
             'apiRoute' => '/profile/v1/users',
             'sheetName' => 'Provider',
+            'requestParams' => [
+              'filter' => ['roleId' => 6]
+            ],
             'columns' => [
               'id' => 'ID',
               'fullName' => 'NOMBRE'
