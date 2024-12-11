@@ -15,6 +15,7 @@ class Item extends CrudModel
   ];
   public $modelRelations = [
     'suppliers' => [
+      'relation' => 'hasMany',
       'type' => 'updateOrCreateMany',
       'compareKeys' => ['supplier_id']
     ]
@@ -43,6 +44,11 @@ class Item extends CrudModel
     'extra_data'
   ];
 
+  protected $casts = [
+    'extra_data' => 'array',
+    'options' => 'array'
+  ];
+
   public function getStatusAttribute()
   {
     $status = new Status();
@@ -51,7 +57,7 @@ class Item extends CrudModel
 
   public function order()
   {
-    $this->belongsTo(Order::class);
+    return $this->belongsTo(Order::class);
   }
 
   public function suppliers()

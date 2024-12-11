@@ -15,6 +15,7 @@ class Order extends CrudModel
   ];
   public $modelRelations = [
     'items' => [
+      'relation' => 'hasMany',
       'type' => 'updateOrCreateMany',
       'compareKeys' => ['entity_type','entity_id']
     ]

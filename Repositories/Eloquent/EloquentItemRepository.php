@@ -75,4 +75,62 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
     //Response
     return $model;
   }
+
+  public function beforeCreate(&$data)
+  {
+    // Ensure 'entity_type' and 'entity_id' are provided
+    if (!isset($data['entity_type'], $data['entity_id'])) {
+      throw new \Exception('Insufficient data to process the entity.'); // Prevent creation
+    }
+
+    // Dynamically resolve the entity class
+    $entityClass = app($data['entity_type']);
+    if (!isset($entityClass)) {
+      throw new \Exception('The specified class does not exist.'); // Prevent creation
+    }
+
+    // Resolve the repository for the entity
+    $repository = app($entityClass->repository);
+    $params = [];
+
+    // Include specific relationships if applicable
+    if ($entityClass->repository === 'Modules\\Iproduct\\Repositories\\ProductRepository') {
+      $params['include'] = 'prices';
+    }
+
+    // Fetch the associated model
+    $model = $repository->getItem($data['entity_id'], $params);
+
+    // Check if the model exists
+    if (!$model) {
+      throw new \Exception('The associated model does not exist.'); // Prevent creation
+    }
+
+    // Process quantity and price
+    $quantity = $data['quantity'] ?? 0;
+    $price = 0;
+
+    if ($entityClass->repository === 'Modules\\Iproduct\\Repositories\\ProductRepository') {
+      $defaultZone = $model->getDefaultZone();
+      if ($defaultZone) {
+        $defaultPrice = $model->prices->where('zone_id', $defaultZone->id)->first();
+        $price = $defaultPrice->value ?? 0;
+      }
+
+      // Set attributes for the current model
+      $data['price'] = $price;
+      $data['total'] = $quantity * $price;
+      $data['extra_data'] = json_encode($model->toArray());
+      $data['title'] = $model->title ?? $model->name ?? null;
+
+      $suppliers = $data['suppliers'] ?? [];
+
+      foreach ($suppliers as $index => $supplier) {
+        $supplier['quantity'] = $quantity;
+        $supplier['price'] = $price;
+        $supplier['total'] = $quantity * $price;
+        $data['suppliers'][$index] = $supplier;
+      }
+    }
+  }
 }
