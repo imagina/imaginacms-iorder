@@ -2,6 +2,7 @@
 
 namespace Modules\Iorder\Repositories\Eloquent;
 
+use Modules\Iorder\Entities\Status;
 use Modules\Iorder\Repositories\SupplyRepository;
 use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 
@@ -90,6 +91,51 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
         $query->where('supplier_id', $user->id);
 
       }
+    }
+  }
+
+  public function beforeUpdate(&$data)
+  {
+    if (!in_array($data['status_id'], [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
+      return; // Early return if status is not relevant
+    }
+
+    $model = $this->getItem($data['id'], ['include' => ['item.suppliers']]);
+    $item = $model->item;
+
+    $newItemStatus = $this->determineNewItemStatus($data, $item);
+
+    if ($newItemStatus) {
+      $repositoryItem = app($item->repository);
+      $repositoryItem->updateBy($item->id, ['status_id' => $newItemStatus]);
+      unset($data['item']); // Remove item data from original update
+    }
+
+  }
+
+  private function determineNewItemStatus(&$data,$item)
+  {
+    switch ($data['status_id']) {
+      case Status::SUPPLY_ACCEPTED:
+        if ($data['price'] == $item->price && $data['quantity'] == $item->quantity) {
+          return Status::ITEM_COMPLETED;
+        } else {
+          $data['status_id'] = Status::SUPPLY_MODIFIED;
+          return Status::ITEM_PENDING_REVIEW;
+        }
+      case Status::SUPPLY_REFUSED:
+        $suppliersWithDifferentStatus = $item->suppliers
+          ->where('status_id', '!=', $data['status_id'])
+          ->where('id', '!=', $data['id'])
+          ->first();
+
+        if (!$suppliersWithDifferentStatus) {
+          return Status::ITEM_CANCELLED;
+        }
+
+        return null;
+      default:
+        return null; // Should not happen due to initial check, but good practice
     }
   }
 }
