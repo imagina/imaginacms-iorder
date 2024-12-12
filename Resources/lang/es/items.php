@@ -9,6 +9,7 @@ return [
     'items' => 'Elemento',
     'create item' => 'Crear un elemento',
     'edit item' => 'Editar un elemento',
+    'updatedEvent' => 'Cambio en el estado de la orden #:id ',
   ],
   'button' => [
     'create item' => 'Crear un elemento',
@@ -18,6 +19,9 @@ return [
   'form' => [
   ],
   'messages' => [
+    'updatedEvent' => 'Hola, 
+    Te informamos que se ha detectado un cambio en el estado de la orden #:id, ahora se encuentra en estado :status.
+    Para más detalles, puedes consultar la información de tu orden en el siguiente enlace:'
   ],
   'validation' => [
   ],

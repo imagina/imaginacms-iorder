@@ -3,9 +3,11 @@
 namespace Modules\Iorder\Entities;
 
 use Modules\Core\Icrud\Entities\CrudModel;
+use Modules\Notification\Traits\IsNotificable;
 
 class Item extends CrudModel
 {
+  use IsNotificable;
   protected $table = 'iorder__items';
   public $transformer = 'Modules\Iorder\Transformers\ItemTransformer';
   public $repository = 'Modules\Iorder\Repositories\ItemRepository';
@@ -63,5 +65,36 @@ class Item extends CrudModel
   public function suppliers()
   {
     return $this->hasMany(Supply::class);
+  }
+
+  /**
+   * Make Notificable Params | to Trait
+   * @param $event (created|updated|deleted)
+   */
+  public function isNotificableParams($event)
+  {
+    $response = [];
+    $userId = \Auth::id() ?? null;
+    $source = "iorder";
+    $order = $this->order;
+
+    if(!isset($order)) return $response;
+    if($event=="updated") {
+      $email = [];
+      if($order->customer_email); $email[] = $order->customer_email;
+
+      $response[$event] = [
+        "title" => trans("iorder::items.title.updatedEvent",  ['id' => $this->id]),
+        "message" => trans("iorder::items.messages.updatedEvent", ['id' => $this->id, 'status' => $this->status['title'] ?? '']),
+        "email" => $email,
+        "broadcast" => [$order->customer_id],
+        "userId" => $userId,
+        "source" => $source,
+        "link" => url('/iadmin/#/orders/orders/index')
+      ];
+    }
+
+    return $response;
+
   }
 }
