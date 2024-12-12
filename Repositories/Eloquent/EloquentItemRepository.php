@@ -3,6 +3,7 @@
 namespace Modules\Iorder\Repositories\Eloquent;
 
 use Modules\Iorder\Entities\Status;
+use Modules\Iorder\Entities\Type;
 use Modules\Iorder\Repositories\ItemRepository;
 use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 
@@ -139,14 +140,15 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
 
   public function beforeUpdate(&$data)
   {
-    if (!in_array($data['status_id'], [Status::ITEM_COMPLETED, Status::ITEM_PENDING_REVIEW, Status::ITEM_CANCELLED, Status::ITEM_SHIPPED])) {
+    $model = $this->getItem($data['id'], ['include' => ['order.items']]);
+    $order = $model->order;
+
+    if ($order->type_id == Type::SUPPLY
+      && !in_array($data['status_id'], [Status::ITEM_COMPLETED, Status::ITEM_PENDING_REVIEW, Status::ITEM_CANCELLED])) {
       return; // Early return if status is not relevant
     }
 
-    $model = $this->getItem($data['id'], ['include' => ['order']]);
-    $order = $model->order;
-
-    $orderStatus = $this->determineNewItemStatus($data, $order);
+    $orderStatus = $this->determineNewOrderStatus($data, $order);
 
     if (isset($orderStatus)) {
       $repositoryOrders = app($order->repository);
@@ -154,23 +156,41 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
     }
   }
 
-  private function determineNewItemStatus($data, $order)
+  private function determineNewOrderStatus($data, $order)
   {
     $response = null;
     switch ($data['status_id']) {
       case Status::ITEM_COMPLETED:
-        //Debe crearse el documento soporte
-        $response = Status::ORDER_APPROVED;
+        $changeStatus = $this->checkItemsStatus($data['id'], $order, Status::ITEM_COMPLETED);
+        if (!$changeStatus) {
+          //Debe crearse el documento soporte
+          $response = Status::ORDER_APPROVED;
+        } else {
+          $response = Status::ORDER_IN_PROGRESS;
+        }
       case Status::ITEM_CANCELLED:
-        $response = Status::ORDER_CANCELLED;
+        $changeStatus = $this->checkItemsStatus($data['id'], $order, Status::ITEM_CANCELLED);
+        if (!$changeStatus) {
+          $response = Status::ORDER_CANCELLED;
+        } else {
+          $response = Status::ORDER_IN_PROGRESS;
+        }
       case Status::ITEM_PENDING_REVIEW:
         $response = Status::ORDER_IN_PROGRESS;
-      case Status::ITEM_SHIPPED:
-        $response = Status::ORDER_SHIPPED;
       default:
         $response = null;
     }
 
     return $response;
+  }
+
+  private function checkItemsStatus($currentModelId, $order, $statusId)
+  {
+    $items = $order->items
+      ->where('status_id', '!=', $statusId)
+      ->where('id', '!=', $currentModelId)
+      ->first();
+
+    return isset($items);
   }
 }
