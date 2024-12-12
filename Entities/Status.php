@@ -23,6 +23,8 @@ class Status extends CrudStaticModel
   const ITEM_PENDING = 201;
   const ITEM_COMPLETED = 202;
   const ITEM_CANCELLED = 203;
+  const ITEM_PENDING_REVIEW = 204;
+  const ITEM_SHIPPED = 205;
 
   // Supply statuses
   const SUPPLY_PENDING = 301;
@@ -37,42 +39,42 @@ class Status extends CrudStaticModel
       // Order statuses
       self::ORDER_PENDING => [
         'title' => trans('iorder::status.order_pending'),
-        'icon' => 'fa-light fa-hourglass-start',
+        'icon' => 'fa-solid fa-hourglass-start',
         'color' => '#1378D6',
         'id' => self::ORDER_PENDING,
         'groupId' => self::GROUP_ORDER,
       ],
       self::ORDER_IN_PROGRESS => [
         'title' => trans('iorder::status.order_in_progress'),
-        'icon' => 'fa-light fa-spinner',
+        'icon' => 'fa-solid fa-spinner',
         'color' => '#FFA500',
         'id' => self::ORDER_IN_PROGRESS,
         'groupId' => self::GROUP_ORDER,
       ],
       self::ORDER_CANCELLED => [
         'title' => trans('iorder::status.order_cancelled'),
-        'icon' => 'fa-light fa-circle-xmark',
+        'icon' => 'fa-solid fa-circle-xmark',
         'color' => '#E52E39',
         'id' => self::ORDER_CANCELLED,
         'groupId' => self::GROUP_ORDER,
       ],
       self::ORDER_APPROVED => [
         'title' => trans('iorder::status.order_approved'),
-        'icon' => 'fa-light fa-circle-check',
+        'icon' => 'fa-solid fa-circle-check',
         'color' => '#45CD63',
         'id' => self::ORDER_APPROVED,
         'groupId' => self::GROUP_ORDER,
       ],
       self::ORDER_SHIPPED => [
         'title' => trans('iorder::status.order_shipped'),
-        'icon' => 'fa-light fa-receipt',
+        'icon' => 'fa-solid fa-receipt',
         'color' => '#31C4E4',
         'id' => self::ORDER_SHIPPED,
         'groupId' => self::GROUP_ORDER,
       ],
       self::ORDER_COMPLETED => [
         'title' => trans('iorder::status.order_completed'),
-        'icon' => 'fa-light fa-circle-check',
+        'icon' => 'fa-solid fa-circle-check',
         'color' => '#45CD63',
         'id' => self::ORDER_COMPLETED,
         'groupId' => self::GROUP_ORDER,
@@ -81,58 +83,72 @@ class Status extends CrudStaticModel
       // Item statuses
       self::ITEM_PENDING => [
         'title' => trans('iorder::status.item_pending'),
-        'icon' => 'fa-light fa-hourglass-start',
+        'icon' => 'fa-solid fa-hourglass-start',
         'color' => '#1378D6',
         'id' => self::ITEM_PENDING,
         'groupId' => self::GROUP_ITEM,
       ],
       self::ITEM_COMPLETED => [
         'title' => trans('iorder::status.item_completed'),
-        'icon' => 'fa-light fa-circle-check',
+        'icon' => 'fa-solid fa-circle-check',
         'color' => '#45CD63',
         'id' => self::ITEM_COMPLETED,
         'groupId' => self::GROUP_ITEM,
       ],
       self::ITEM_CANCELLED => [
         'title' => trans('iorder::status.item_cancelled'),
-        'icon' => 'fa-light fa-circle-xmark',
+        'icon' => 'fa-solid fa-circle-xmark',
         'color' => '#E52E39',
         'id' => self::ITEM_CANCELLED,
+        'groupId' => self::GROUP_ITEM,
+      ],
+      self::ITEM_PENDING_REVIEW => [
+        'title' => trans('iorder::status.item_pending_review'),
+        'icon' => 'fa-solid fa-eye',
+        'color' => '#9A53F4',
+        'id' => self::ITEM_PENDING_REVIEW,
+        'groupId' => self::GROUP_ITEM,
+      ],
+      self::ITEM_SHIPPED => [
+        'title' => trans('iorder::status.item_shipped'),
+        'icon' => 'fa-solid fa-receipt',
+        'color' => '#31C4E4',
+        'id' => self::ITEM_SHIPPED,
         'groupId' => self::GROUP_ITEM,
       ],
 
       // Supply statuses
       self::SUPPLY_PENDING => [
         'title' => trans('iorder::status.supply_pending'),
-        'icon' => 'fa-light fa-eye',
-        'color' => '#9A53F4',
+        'icon' => 'fa-solid fa-pen',
+        'color' => '#007BFF',
         'id' => self::SUPPLY_PENDING,
         'groupId' => self::GROUP_SUPPLY,
       ],
       self::SUPPLY_ACCEPTED => [
         'title' => trans('iorder::status.supply_accepted'),
-        'icon' => 'fa-light fa-circle-check',
+        'icon' => 'fa-solid fa-circle-check',
         'color' => '#45CD63',
         'id' => self::SUPPLY_ACCEPTED,
         'groupId' => self::GROUP_SUPPLY,
       ],
       self::SUPPLY_REFUSED => [
         'title' => trans('iorder::status.supply_refused'),
-        'icon' => 'fa-light fa-circle-xmark',
+        'icon' => 'fa-solid fa-circle-xmark',
         'color' => '#E52E39',
         'id' => self::SUPPLY_REFUSED,
         'groupId' => self::GROUP_SUPPLY,
       ],
       self::SUPPLY_MODIFIED => [
         'title' => trans('iorder::status.supply_modified'),
-        'icon' => 'fa-light fa-pen',
-        'color' => '#007BFF',
+        'icon' => 'fa-solid fa-eye',
+        'color' => '#9A53F4',
         'id' => self::SUPPLY_MODIFIED,
         'groupId' => self::GROUP_SUPPLY,
       ],
       self::SUPPLY_SELECTED => [
         'title' => trans('iorder::status.supply_selected'),
-        'icon' => 'fa-light fa-check-circle',
+        'icon' => 'fa-solid fa-check-circle',
         'color' => '#28A745',
         'id' => self::SUPPLY_SELECTED,
         'groupId' => self::GROUP_SUPPLY,
