@@ -47,6 +47,7 @@ class EloquentOrderRepository extends EloquentCrudRepository implements OrderRep
      *
      */
 
+    $this->validateIndexAllPermission($query, $params);
     //Response
     return $query;
   }
@@ -74,5 +75,21 @@ class EloquentOrderRepository extends EloquentCrudRepository implements OrderRep
 
     //Response
     return $model;
+  }
+
+  function validateIndexAllPermission(&$query, $params)
+  {
+
+    if (!isset($params->permissions['iorder.orders.index-all']) ||
+      (isset($params->permissions['iorder.orders.index-all']) &&
+        !$params->permissions['iorder.orders.index-all'])) {
+      $user = $params->user ?? null;
+
+      if (isset($user->id)) {
+        $query = $query->whereHas('items.suppliers', function ($query) use ($user) {
+          $query->where('supplier_id', $user->id);
+        });
+      }
+    }
   }
 }

@@ -48,6 +48,13 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
      *
      */
 
+    if (isset($filter->orderId)) {
+      $query = $query->whereHas('item', function ($query) use ($filter) {
+        $query->where('order_id', $filter->orderId);
+      });
+    }
+
+
     $this->validateIndexAllPermission($query, $params);
     //Response
     return $query;
