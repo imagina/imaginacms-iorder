@@ -96,6 +96,8 @@ class Supply extends CrudModel
       }
     }
 
+    \Log::info('Notification::Supply|'. $event .'|IsNotificable: email: ' . $supplier->email . ' | broadcast: ' . $this->supplier_id);
+
     return $response;
 
   }

@@ -96,6 +96,8 @@ class Item extends CrudModel
       ];
     }
 
+    \Log::info('Notification::Item|'. $event .'|IsNotificable: email: ' . $email[0] . ' | broadcast: ' . $order->customer_id);
+
     return $response;
 
   }
