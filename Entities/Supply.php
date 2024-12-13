@@ -67,11 +67,13 @@ class Supply extends CrudModel
 
     if(!isset($supplier)) return $response;
 
+    $orderId = $this->item->order->id;
+
     //Validation Event Created
     if($event=="created"){
       $response[$event] = [
         "title" => trans("iorder::supplies.title.createdEvent"),
-        "message" => trans("iorder::supplies.messages.createdEvent", ['userName' => $supplier->first_name, 'id' => $this->id]),
+        "message" => trans("iorder::supplies.messages.createdEvent", ['userName' => $supplier->first_name, 'id' => $orderId]),
         "email" => [$supplier->email],
         "broadcast" => [$this->supplier_id],
         "userId" => $userId,
@@ -83,8 +85,8 @@ class Supply extends CrudModel
     if($event=="updated") {
       if (!in_array($this->status_id, [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
         $response[$event] = [
-          "title" => trans("iorder::supplies.title.updatedEvent",  ['id' => $this->id]),
-          "message" => trans("iorder::supplies.messages.updatedEvent", ['userName' => $supplier->first_name, 'id' => $this->id, 'status' => $this->status['title'] ?? '']),
+          "title" => trans("iorder::supplies.title.updatedEvent",  ['id' => $orderId]),
+          "message" => trans("iorder::supplies.messages.updatedEvent", ['userName' => $supplier->first_name, 'id' => $orderId, 'status' => $this->status['title'] ?? '']),
           "email" => [$supplier->email],
           "broadcast" => [$this->supplier_id],
           "userId" => $userId,

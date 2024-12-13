@@ -83,9 +83,11 @@ class Item extends CrudModel
       $email = [];
       if($order->customer_email); $email[] = $order->customer_email;
 
+      $orderId = $order->id;
+
       $response[$event] = [
-        "title" => trans("iorder::items.title.updatedEvent",  ['id' => $this->id]),
-        "message" => trans("iorder::items.messages.updatedEvent", ['id' => $this->id, 'status' => $this->status['title'] ?? '']),
+        "title" => trans("iorder::items.title.updatedEvent",  ['id' => $orderId]),
+        "message" => trans("iorder::items.messages.updatedEvent", ['id' => $orderId, 'status' => $this->status['title'] ?? '']),
         "email" => $email,
         "broadcast" => [$order->customer_id],
         "userId" => $userId,
