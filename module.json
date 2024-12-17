@@ -8,7 +8,8 @@
     "providers": [
         "Modules\\Iorder\\Providers\\IorderServiceProvider",
         "Modules\\Iorder\\Providers\\EventServiceProvider",
-        "Modules\\Iorder\\Providers\\RouteServiceProvider"
+        "Modules\\Iorder\\Providers\\RouteServiceProvider",
+        "Modules\\Iorder\\Providers\\ScheduleServiceProvider"
     ],
     "files": []
 }
