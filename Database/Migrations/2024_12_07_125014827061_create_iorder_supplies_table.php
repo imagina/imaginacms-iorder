@@ -23,7 +23,7 @@ return new class extends Migration {
       $table->float('price', 20, 2)->default(0);
       $table->float('total', 50, 2)->default(0);
       $table->integer('supplier_id')->unsigned();
-      $table->foreign('supplier_id')->references('id')->on('users');
+      $table->foreign('supplier_id')->references('id')->on(config('auth.table', 'users'))->onDelete('restrict');
       $table->text('comment')->nullable();
       $table->text('options')->nullable();
       // Audit fields

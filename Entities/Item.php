@@ -82,7 +82,6 @@ class Item extends CrudModel
     if($event=="updated") {
       $email = [];
       if($order->customer_email); $email[] = $order->customer_email;
-
       $orderId = $order->id;
 
       $response[$event] = [
@@ -94,9 +93,9 @@ class Item extends CrudModel
         "source" => $source,
         "link" => url('/iadmin/#/orders/orders/index')
       ];
-    }
 
-    \Log::info('Notification::Item|'. $event .'|IsNotificable: email: ' . $email[0] . ' | broadcast: ' . $order->customer_id);
+      \Log::info('Notification::Item|'. $event .'|IsNotificable: email: ' . $email[0] . ' | broadcast: ' . $order->customer_id);
+    }
 
     return $response;
 
