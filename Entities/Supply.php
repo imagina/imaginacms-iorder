@@ -3,6 +3,7 @@
 namespace Modules\Iorder\Entities;
 
 use Modules\Core\Icrud\Entities\CrudModel;
+use Modules\Isite\Relations\EmptyRelation;
 use Modules\Notification\Traits\IsNotificable;
 
 class Supply extends CrudModel
@@ -52,6 +53,15 @@ class Supply extends CrudModel
     $driver = config('asgard.user.config.driver');
 
     return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'supplier_id');
+  }
+
+  public function external()
+  {
+    if (is_module_enabled('Iexternal')) {
+      return $this->hasOne(\Modules\Iexternal\Entities\External::class, 'entity_id', 'supplier_id')
+                  ->where('entity_type', '=', "Modules\\User\\Entities\\Sentinel\\User");
+    }
+    return new EmptyRelation();
   }
 
   /**

@@ -97,7 +97,7 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
 
     // Include specific relationships if applicable
     if ($entityClass->repository === 'Modules\\Iproduct\\Repositories\\ProductRepository') {
-      $params['include'] = 'prices,files';
+      $params['include'] = 'prices,files,external';
     }
 
     // Fetch the associated model
@@ -113,6 +113,7 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
     $price = 0;
 
     if ($entityClass->repository === 'Modules\\Iproduct\\Repositories\\ProductRepository') {
+      $model->external = $model->external;
       $model->mediaFiles = $model->mediaFiles();
       unset($model->files);
       $defaultZone = $model->getDefaultZone();
