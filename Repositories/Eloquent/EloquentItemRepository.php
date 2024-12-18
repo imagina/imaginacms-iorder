@@ -140,51 +140,101 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
 
   public function beforeUpdate(&$data)
   {
-    $model = $this->getItem($data['id'], ['include' => ['order.items']]);
+    $model = $this->getItem($data['id'], ['include' => ['order.items', 'suppliers']]);
     $order = $model->order;
 
-    if ($order->type_id == Type::SUPPLY
-      && !in_array($data['status_id'], [Status::ITEM_COMPLETED, Status::ITEM_PENDING_REVIEW, Status::ITEM_CANCELLED])) {
+    if (isset($data['automatic']) || ($order->type_id == Type::SUPPLY
+      && !in_array($data['status_id'], [Status::ITEM_COMPLETED, Status::ITEM_PENDING_REVIEW, Status::ITEM_CANCELLED]))) {
       return; // Early return if status is not relevant
     }
 
-    $orderStatus = $this->determineNewOrderStatus($data, $order);
+    //Ignore other status when is supply type
+    if (!in_array($order->status_id, [Status::ORDER_PENDING, Status::ORDER_IN_PROGRESS])) {
+      $tmpData = $data;
+
+      $data = [
+        'id' => $tmpData['id']
+      ];
+      return;
+    }
+    $supplies = $model->suppliers;
+    $status = $this->determineStatus($data, $order, $supplies);
+    $orderStatus = $status['order'] ?? null;
+    $suppliesStatus = $status['supply'] ?? null;
+
+    if (isset($suppliesStatus) && !empty($suppliesStatus)) {
+      $firstSuply = $supplies->first();
+      $repositorySupplies = app($firstSuply->repository);
+      $allStatus = $suppliesStatus['all'] ?? null;
+
+      if(isset($allStatus)) {
+        foreach ($supplies as $supply) {
+          $status_id = $allStatus;
+          if (in_array($supply->status_id, [Status::SUPPLY_MODIFIED, Status::SUPPLY_PENDING])) {
+            if($status_id == Status::SUPPLY_ACCEPTED &&
+              $supply->status_id == Status::SUPPLY_PENDING) {
+              $status_id = Status::SUPPLY_REFUSED;
+            }
+
+            $repositorySupplies->updateBy($supply->id, ['status_id' => $status_id, 'automatic' => 0]);
+          }
+        }
+      }
+
+      if(isset($data['suppliers'])) unset($data['suppliers']);
+    }
 
     if (isset($orderStatus)) {
       $repositoryOrders = app($order->repository);
-      $repositoryOrders->updateBy($order->id, ['status_id' => $orderStatus]);
+      $repositoryOrders->updateBy($order->id, ['status_id' => $orderStatus, 'automatic' => 0]);
+      if(isset($data['order'])) unset($data['order']);
     }
   }
 
-  private function determineNewOrderStatus($data, $order)
+  private function determineStatus($data, $order, $supplies)
   {
-    $response = null;
+    $orderStatus = null;
+    $supplyStatus = [];
+    $response = [];
+
     switch ($data['status_id']) {
       case Status::ITEM_COMPLETED:
         $changeStatus = $this->checkItemsStatus($data['id'], $order, Status::ITEM_COMPLETED);
-        if (!$changeStatus) {
-          //Debe crearse el documento soporte
-          $response = Status::ORDER_APPROVED;
-        } else {
-          $response = Status::ORDER_IN_PROGRESS;
-        }
+
+        if ($changeStatus) $orderStatus = Status::ORDER_IN_PROGRESS;
+        else $orderStatus = Status::ORDER_APPROVED;
+
+        //TODO: Change this for specific supplies, because its necesary reject the other supplies or analyze the logic
+        $supplyStatus['all'] = Status::SUPPLY_ACCEPTED;
+        break;
       case Status::ITEM_CANCELLED:
         $changeStatus = $this->checkItemsStatus($data['id'], $order, Status::ITEM_CANCELLED);
-        if (!$changeStatus) {
-          $response = Status::ORDER_CANCELLED;
-        } else {
-          $response = Status::ORDER_IN_PROGRESS;
-        }
+
+        if ($changeStatus) $orderStatus = Status::ORDER_IN_PROGRESS;
+        else $orderStatus = Status::ORDER_CANCELLED;
+        $supplyStatus['all'] = Status::SUPPLY_REFUSED;
+        break;
       case Status::ITEM_PENDING_REVIEW:
-        $response = Status::ORDER_IN_PROGRESS;
-      default:
-        $response = null;
+        $orderStatus = Status::ORDER_IN_PROGRESS;
+        break;
     }
+    if (isset($orderStatus)) $response['order'] = $orderStatus;
+    if (!empty($supplyStatus)) $response['supply'] = $supplyStatus;
 
     return $response;
   }
 
   private function checkItemsStatus($currentModelId, $order, $statusId)
+  {
+    $items = $order->items
+      ->where('status_id', '!=', $statusId)
+      ->where('id', '!=', $currentModelId)
+      ->first();
+
+    return isset($items);
+  }
+
+  private function checkSuppliesStatus($currentModelId, $order, $statusId)
   {
     $items = $order->items
       ->where('status_id', '!=', $statusId)

@@ -103,18 +103,31 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
 
   public function beforeUpdate(&$data)
   {
-    if (!in_array($data['status_id'], [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
+    \Log::info('Pass 1' . json_encode($data));
+    if (isset($data['automatic']) || !in_array($data['status_id'], [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
       return; // Early return if status is not relevant
     }
 
     $model = $this->getItem($data['id'], ['include' => ['item.suppliers']]);
+    if (!isset($data['price'])) $data['price'] = $model->price;
+    if (!isset($data['quantity'])) $data['quantity'] = $model->quantity;
     $item = $model->item;
+
+    if($item->status_id != Status::ITEM_PENDING)
+    {
+      $tmpData = $data;
+
+      $data = [
+        'id' => $tmpData['id']
+      ];
+      return;
+    }
 
     $newItemStatus = $this->determineNewItemStatus($data, $item);
 
     if ($newItemStatus) {
       $repositoryItem = app($item->repository);
-      $repositoryItem->updateBy($item->id, ['status_id' => $newItemStatus]);
+      $repositoryItem->updateBy($item->id, ['status_id' => $newItemStatus, 'automatic' => 0]);
       unset($data['item']); // Remove item data from original update
     }
 
