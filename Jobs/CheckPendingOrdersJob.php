@@ -25,7 +25,6 @@ class CheckPendingOrdersJob implements ShouldQueue
    */
   public function __construct($hours)
   {
-    $this->notification = app("Modules\Notification\Services\Inotification");
     $this->supplyRepository = app(SupplyRepository::class);
     $this->hoursCheckLimit = $hours ?? 0;
   }
@@ -76,7 +75,8 @@ class CheckPendingOrdersJob implements ShouldQueue
         trans("iorder::supplies.messages.adminOrderRemind", ['count' => $countOrders]),
         '/iadmin/#/orders/orders/index?order.orders=%7B"statusId":"201"%7D',
         $data['email'],
-        $data['id']
+        $data['id'],
+        'Job|PendingSupplies'
       );
     }
   }
@@ -96,7 +96,9 @@ class CheckPendingOrdersJob implements ShouldQueue
         trans("iorder::supplies.messages.checkOrder", ['count' => $countModified]),
         '/iadmin/#/orders/orders/index?order.orders=%7B"statusId":"204"%7D',
         $data['email'],
-        $data['id']);
+        $data['id'],
+        'Job|ModifiedSupplies'
+      );
     }
   }
 
@@ -120,7 +122,8 @@ class CheckPendingOrdersJob implements ShouldQueue
           '/iadmin/#/orders/supplies/index?order.supplies=%7B"statusId":"301"%7D',
           [$supply->supplier->email],
           [$supplierId],
-          'User');
+          'Job|Supplies'
+        );
       }
     }
   }
@@ -155,11 +158,10 @@ class CheckPendingOrdersJob implements ShouldQueue
   /**
    * Send notification to the users.
    */
-  private function notifyUsers($title, $msg, $url = '', $emails = [], $ids = [], $notify = 'Admin')
+  private function notifyUsers($title, $msg, $url = '', $emails = [], $ids = [], $source = 'Admin')
   {
-    \Log::info("IOrder: Jobs|CheckPendingOrdersJob|SendNotifications|" . $notify . ": " . implode(',', $ids));
-
-    $this->notification->to([
+    $notification = app("Modules\Notification\Services\Inotification");
+    $notification->to([
       'email' => $emails ?? [],
       'broadcast' => $ids ?? []
     ])->push([
@@ -167,7 +169,7 @@ class CheckPendingOrdersJob implements ShouldQueue
       "message" => $msg,
       "setting" => ["saveInDatabase" => 1],
       "link" => url($url),
-      "source" => 'job/ioder'
+      "source" => $source
     ]);
   }
 }
