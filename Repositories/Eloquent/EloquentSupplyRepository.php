@@ -127,7 +127,7 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
 
     if ($newItemStatus) {
       $repositoryItem = app($item->repository);
-      $repositoryItem->updateBy($item->id, ['status_id' => $newItemStatus, 'automatic' => 0]);
+      $repositoryItem->updateBy($item->id, ['status_id' => $newItemStatus]);
       unset($data['item']); // Remove item data from original update
     }
 
