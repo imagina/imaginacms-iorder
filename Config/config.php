@@ -7,7 +7,7 @@ return [
   'synchronizable' => [
     'entities' => [
       'iorder_syncOrders' => [
-        'base_template_id' => '1LeggrpfqCiM8f7MnK5mSMWuqFZonm-WcpAP7zWs5r1k',
+        'base_template_id' => '1Iyk9DXPzXbMoXB8BoruKkVidVKDDKCOyRANaLuxpx5I',
         'apiRoute' => '/iorder/v3/orders',
         "supportedActions" =>  ["import"],
         'sheetName' => 'Orders',

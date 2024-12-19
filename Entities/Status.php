@@ -18,6 +18,7 @@ class Status extends CrudStaticModel
   const ORDER_APPROVED = 104;
   const ORDER_SHIPPED = 105;
   const ORDER_COMPLETED = 106;
+  const ORDER_INVOICED = 107;
 
   // Item statuses
   const ITEM_PENDING = 201;
@@ -25,6 +26,7 @@ class Status extends CrudStaticModel
   const ITEM_CANCELLED = 203;
   const ITEM_PENDING_REVIEW = 204;
   const ITEM_SHIPPED = 205;
+  const ITEM_INVOICED = 206;
 
   // Supply statuses
   const SUPPLY_PENDING = 301;
@@ -67,8 +69,8 @@ class Status extends CrudStaticModel
       ],
       self::ORDER_SHIPPED => [
         'title' => trans('iorder::status.order_shipped'),
-        'icon' => 'fa-solid fa-receipt',
-        'color' => '#31C4E4',
+        'icon' => 'fa-solid fa-truck',
+        'color' => '#FFA500',
         'id' => self::ORDER_SHIPPED,
         'groupId' => self::GROUP_ORDER,
       ],
@@ -77,6 +79,13 @@ class Status extends CrudStaticModel
         'icon' => 'fa-solid fa-circle-check',
         'color' => '#45CD63',
         'id' => self::ORDER_COMPLETED,
+        'groupId' => self::GROUP_ORDER,
+      ],
+      self::ORDER_INVOICED => [
+        'title' => trans('iorder::status.order_invoiced'),
+        'icon' => 'fa-solid fa-receipt',
+        'color' => '#31C4E4',
+        'id' => self::ORDER_INVOICED,
         'groupId' => self::GROUP_ORDER,
       ],
 
@@ -111,9 +120,16 @@ class Status extends CrudStaticModel
       ],
       self::ITEM_SHIPPED => [
         'title' => trans('iorder::status.item_shipped'),
+        'icon' => 'fa-solid fa-truck',
+        'color' => '#FFA500',
+        'id' => self::ITEM_SHIPPED,
+        'groupId' => self::GROUP_ITEM,
+      ],
+      self::ITEM_INVOICED => [
+        'title' => trans('iorder::status.item_invoiced'),
         'icon' => 'fa-solid fa-receipt',
         'color' => '#31C4E4',
-        'id' => self::ITEM_SHIPPED,
+        'id' => self::ITEM_INVOICED,
         'groupId' => self::GROUP_ITEM,
       ],
 
