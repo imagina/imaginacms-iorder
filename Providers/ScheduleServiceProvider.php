@@ -19,7 +19,7 @@ class ScheduleServiceProvider extends ServiceProvider
         $schedule = $this->app->make(Schedule::class);
         $schedule->call(function () use ($hours) {
           \Modules\Iorder\Jobs\CheckPendingOrdersJob::dispatch($hours);
-        })->dailyAt('14:00');
+        })->dailyAt('19:00');
       }
     });
   }
