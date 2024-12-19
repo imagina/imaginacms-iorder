@@ -3,6 +3,7 @@
 namespace Modules\Iorder\Entities;
 
 use Modules\Core\Icrud\Entities\CrudModel;
+use Modules\Isite\Relations\EmptyRelation;
 use Modules\Notification\Traits\IsNotificable;
 
 class Item extends CrudModel
@@ -65,6 +66,11 @@ class Item extends CrudModel
   public function suppliers()
   {
     return $this->hasMany(Supply::class);
+  }
+
+  public function entity()
+  {
+    return $this->morphTo(__FUNCTION__, 'entity_type', 'entity_id');
   }
 
   /**
