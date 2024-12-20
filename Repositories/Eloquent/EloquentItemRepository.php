@@ -144,7 +144,7 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
     $model = $this->getItem($data['id'], ['include' => ['order.items', 'suppliers']]);
     $order = $model->order;
 
-    if (isset($data['automatic']) || ($order->type_id == Type::SUPPLY
+    if (isset($data['automatic']) || ($order->type_id != Type::SUPPLY
       && !in_array($data['status_id'], [Status::ITEM_COMPLETED, Status::ITEM_PENDING_REVIEW, Status::ITEM_CANCELLED]))) {
       return; // Early return if status is not relevant
     }

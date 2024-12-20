@@ -58,7 +58,7 @@ class Order extends CrudModel
     'options',
     'payment_name',
     'shipping_name',
-    'type'
+    'type_id'
   ];
 
   public function getTypeAttribute()

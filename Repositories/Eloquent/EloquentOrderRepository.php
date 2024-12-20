@@ -2,6 +2,8 @@
 
 namespace Modules\Iorder\Repositories\Eloquent;
 
+use Modules\Iorder\Entities\Status;
+use Modules\Iorder\Entities\Type;
 use Modules\Iorder\Repositories\OrderRepository;
 use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 
@@ -90,6 +92,42 @@ class EloquentOrderRepository extends EloquentCrudRepository implements OrderRep
           $query->where('supplier_id', $user->id);
         });
       }
+    }
+  }
+
+  public function beforeUpdate(&$data)
+  {
+    $model = $this->getItem($data['id'], ['include' => ['items']]);
+
+    if ($model->type_id != Type::SUPPLY
+        && !in_array($data['status_id'], [Status::ORDER_INVOICED])) {
+      return; // Early return if status is not relevant
+    }
+
+    //Ignore other status when is supply type
+    if (in_array($model->status_id, [Status::ORDER_INVOICED])) {
+      $tmpData = $data;
+
+      $data = [
+        'id' => $tmpData['id']
+      ];
+      return;
+    }
+
+    $status = Status::ITEM_INVOICED;
+    $items = $model->items;
+
+    if (isset($items)) {
+      $firstItem = $items->first();
+      $repositoryItem = app($firstItem->repository);
+
+      foreach ($items as $item) {
+        if($item->status_id != Status::ITEM_INVOICED) {
+          $repositoryItem->updateBy($item->id, ['status_id' => $status, 'automatic' => 0]);
+        }
+      }
+
+      if(isset($data['items'])) unset($data['items']);
     }
   }
 }
