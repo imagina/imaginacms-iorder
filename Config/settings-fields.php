@@ -3,7 +3,6 @@
 return [
   //Users to notify
   'usersToNotify' => [
-    "onlySuperAdmin" => true,
     'name' => 'iorder::usersToNotify',
     'value' => [],
     'type' => 'select',
@@ -23,7 +22,6 @@ return [
   ],
   //Hours limit to notify
   'hoursToNotify' => [
-    "onlySuperAdmin" => true,
     'name' => 'iorder::hoursToNotify',
     'value' => 0,
     'type' => 'input',
