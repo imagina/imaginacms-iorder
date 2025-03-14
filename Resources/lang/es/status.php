@@ -8,6 +8,7 @@ return [
   'order_shipped' => 'Pedido Enviado',
   'order_completed' => 'Pedido Completado',
   'order_invoiced' => 'Pedido Facturado',
+  'to_be_issued' => 'Por Emitir',
   'item_pending' => 'En espera',
   'item_completed' => 'Completado',
   'item_cancelled' => 'Cancelado',

@@ -103,8 +103,9 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
 
   public function beforeUpdate(&$data)
   {
+    if($data['id'] == 91) dd($data);
     \Log::info('Pass 1' . json_encode($data));
-    if (isset($data['automatic']) || !in_array($data['status_id'], [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
+    if (isset($data['automatic']) || !isset($data['status_id']) || !in_array($data['status_id'], [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
       return; // Early return if status is not relevant
     }
 

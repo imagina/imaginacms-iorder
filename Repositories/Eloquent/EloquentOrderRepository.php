@@ -100,7 +100,7 @@ class EloquentOrderRepository extends EloquentCrudRepository implements OrderRep
     $model = $this->getItem($data['id'], ['include' => ['items']]);
 
     if ($model->type_id != Type::SUPPLY
-        && !in_array($data['status_id'], [Status::ORDER_INVOICED])) {
+        && !in_array($data['status_id'], [Status::ORDER_INVOICED, Status::ORDER_TO_BE_ISSUED])) {
       return; // Early return if status is not relevant
     }
 
@@ -114,20 +114,25 @@ class EloquentOrderRepository extends EloquentCrudRepository implements OrderRep
       return;
     }
 
-    $status = Status::ITEM_INVOICED;
-    $items = $model->items;
+    $statusMapping = [
+      Status::ORDER_INVOICED => Status::ITEM_INVOICED,
+      Status::ORDER_TO_BE_ISSUED => Status::ITEM_TO_BE_ISSUED
+    ];
 
-    if (isset($items)) {
-      $firstItem = $items->first();
-      $repositoryItem = app($firstItem->repository);
+    if (isset($statusMapping[$data['status_id']])) {
+      $status = $statusMapping[$data['status_id']];
+      $items = $model->items;
 
-      foreach ($items as $item) {
-        if($item->status_id != Status::ITEM_INVOICED) {
+      if ($items->isNotEmpty()) {
+        $repositoryItem = app($items->first()->repository);
+
+        foreach ($items as $item) {
+          if ($item->status_id === $status) continue;
           $repositoryItem->updateBy($item->id, ['status_id' => $status, 'automatic' => 0]);
         }
-      }
 
-      if(isset($data['items'])) unset($data['items']);
+        if(isset($data['items'])) unset($data['items']);
+      }
     }
   }
 }
