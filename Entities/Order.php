@@ -33,7 +33,6 @@ class Order extends CrudModel
   protected $fillable = [
     'total',
     'status_id',
-    'zone',
     'customer_id',
     'customer_first_name',
     'customer_last_name',
@@ -59,6 +58,9 @@ class Order extends CrudModel
     'payment_name',
     'shipping_name',
     'type_id'
+  ];
+  protected $casts = [
+    'options' => 'array'
   ];
 
   public function getTypeAttribute()
