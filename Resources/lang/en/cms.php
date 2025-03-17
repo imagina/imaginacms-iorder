@@ -13,7 +13,10 @@ return [
     "accept" => "Accept",
     "acceptOrder" => "Accept Order",
     "acceptMessage" => "Do you want to accept this order? Please ensure the units and price are correct.",
-    "suppliesHelp" => "This module allows you to manage orders=> review, edit quantities or prices if needed, and decide whether to accept or reject them. Make sure to verify the details before confirming."
+    "suppliesHelp" => "This module allows you to manage orders=> review, edit quantities or prices if needed, and decide whether to accept or reject them. Make sure to verify the details before confirming.",
+    "externalCreatedAt" => "External Created at",
+    "pendingMessage" => "Are you sure you want to mark this item as pending?",
+    "pendingItem" => "Mark as Pending"
   ],
   "form" => [
     "order" => "Order",
