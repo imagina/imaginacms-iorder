@@ -12,5 +12,6 @@ class CacheOrderDecorator extends BaseCacheCrudDecorator implements OrderReposit
         parent::__construct();
         $this->entityName = 'iorder.orders';
         $this->repository = $order;
+        $this->tags = ['iorder.items'];
     }
 }
