@@ -20,6 +20,7 @@ class Order extends CrudModel
       'compareKeys' => ['entity_type','entity_id']
     ]
   ];
+  static $dynamicTraits = ['Modules\Iexternal\Traits\HasExternal'];
   //Instance external/internal events to dispatch with extraData
   public $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
