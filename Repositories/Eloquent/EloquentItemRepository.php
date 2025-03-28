@@ -144,8 +144,14 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
     $model = $this->getItem($data['id'], ['include' => ['order.items', 'suppliers']]);
     $order = $model->order;
 
-    if (isset($data['automatic']) || ($order->type_id != Type::SUPPLY
-      && !in_array($data['status_id'], [Status::ITEM_COMPLETED, Status::ITEM_PENDING_REVIEW, Status::ITEM_CANCELLED]))) {
+    $statusAllowed = [
+      Status::ITEM_PENDING,
+      Status::ITEM_COMPLETED,
+      Status::ITEM_PENDING_REVIEW,
+      Status::ITEM_CANCELLED
+    ];
+
+    if (!isset($data['status_id']) || $order->type_id != Type::SUPPLY || !in_array($data['status_id'], $statusAllowed)) {
       return; // Early return if status is not relevant
     }
 
@@ -158,6 +164,7 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
       ];
       return;
     }
+
     $supplies = $model->suppliers;
     $status = $this->determineStatus($data, $order, $supplies);
     $orderStatus = $status['order'] ?? null;
@@ -167,28 +174,28 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
       $firstSuply = $supplies->first();
       $repositorySupplies = app($firstSuply->repository);
       $allStatus = $suppliesStatus['all'] ?? null;
+      $isSupplyUpdate = $data['isSupplyUpdate'] ?? null;
 
-      if(isset($allStatus)) {
+      if (isset($allStatus) && !empty($allStatus)) {
         foreach ($supplies as $supply) {
           $status_id = $allStatus;
-          if (in_array($supply->status_id, [Status::SUPPLY_MODIFIED, Status::SUPPLY_PENDING])) {
-            if($status_id == Status::SUPPLY_ACCEPTED &&
-              $supply->status_id == Status::SUPPLY_PENDING) {
-              $status_id = Status::SUPPLY_REFUSED;
-            }
-
-            $repositorySupplies->updateBy($supply->id, ['status_id' => $status_id, 'automatic' => 0]);
+          if($isSupplyUpdate) {
+            if (!in_array($supply->status_id, [Status::SUPPLY_MODIFIED, Status::SUPPLY_PENDING]))
+              continue;
           }
+
+          $repositorySupplies->updateBy($supply->id, ['status_id' => $status_id, 'stopParentUpdate' => true]);
         }
       }
 
-      if(isset($data['suppliers'])) unset($data['suppliers']);
+      if (isset($data['suppliers'])) unset($data['suppliers']);
     }
 
-    if (isset($orderStatus)) {
+    $stopParentUpdate = $data['stopParentUpdate'] ?? null;
+    if (isset($orderStatus) && !$stopParentUpdate) {
       $repositoryOrders = app($order->repository);
-      $repositoryOrders->updateBy($order->id, ['status_id' => $orderStatus, 'automatic' => 0]);
-      if(isset($data['order'])) unset($data['order']);
+      $repositoryOrders->updateBy($order->id, ['status_id' => $orderStatus]);
+      if (isset($data['order'])) unset($data['order']);
     }
   }
 
@@ -203,17 +210,16 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
         $changeStatus = $this->checkItemsStatus($data['id'], $order, Status::ITEM_COMPLETED);
 
         if ($changeStatus) $orderStatus = Status::ORDER_IN_PROGRESS;
-        else $orderStatus = Status::ORDER_APPROVED;
+        else $orderStatus = Status::ORDER_COMPLETED;
 
         //TODO: Change this for specific supplies, because its necesary reject the other supplies or analyze the logic
         $supplyStatus['all'] = Status::SUPPLY_ACCEPTED;
         break;
       case Status::ITEM_CANCELLED:
-        $changeStatus = $this->checkItemsStatus($data['id'], $order, Status::ITEM_CANCELLED);
-
-        if ($changeStatus) $orderStatus = Status::ORDER_IN_PROGRESS;
-        else $orderStatus = Status::ORDER_CANCELLED;
         $supplyStatus['all'] = Status::SUPPLY_REFUSED;
+        break;
+      case Status::ITEM_PENDING:
+        $supplyStatus['all'] = Status::SUPPLY_PENDING;
         break;
       case Status::ITEM_PENDING_REVIEW:
         $orderStatus = Status::ORDER_IN_PROGRESS;

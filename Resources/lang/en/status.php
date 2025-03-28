@@ -8,6 +8,7 @@ return [
   'order_shipped' => 'Order Shipped',
   'order_completed' => 'Order Completed',
   'order_invoiced' => 'Order Invoiced',
+  'to_be_issued' => 'To Be Issued',
   'item_pending' => 'Pending',
   'item_completed' => 'Completed',
   'item_cancelled' => 'Cancelled',

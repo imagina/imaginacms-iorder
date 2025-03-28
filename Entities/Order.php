@@ -20,6 +20,7 @@ class Order extends CrudModel
       'compareKeys' => ['entity_type','entity_id']
     ]
   ];
+  static $dynamicTraits = ['Modules\Iexternal\Traits\HasExternal'];
   //Instance external/internal events to dispatch with extraData
   public $dispatchesEventsWithBindings = [
     //eg. ['path' => 'path/module/event', 'extraData' => [/*...optional*/]]
@@ -33,7 +34,6 @@ class Order extends CrudModel
   protected $fillable = [
     'total',
     'status_id',
-    'zone',
     'customer_id',
     'customer_first_name',
     'customer_last_name',
@@ -59,6 +59,9 @@ class Order extends CrudModel
     'payment_name',
     'shipping_name',
     'type_id'
+  ];
+  protected $casts = [
+    'options' => 'array'
   ];
 
   public function getTypeAttribute()

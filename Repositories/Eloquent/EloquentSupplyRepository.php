@@ -103,8 +103,7 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
 
   public function beforeUpdate(&$data)
   {
-    \Log::info('Pass 1' . json_encode($data));
-    if (isset($data['automatic']) || !in_array($data['status_id'], [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
+    if (!isset($data['status_id']) || !in_array($data['status_id'], [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
       return; // Early return if status is not relevant
     }
 
@@ -113,7 +112,7 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
     if (!isset($data['quantity'])) $data['quantity'] = $model->quantity;
     $item = $model->item;
 
-    if($item->status_id != Status::ITEM_PENDING)
+    if(in_array($item->status_id, [Status::ITEM_TO_BE_ISSUED]))
     {
       $tmpData = $data;
 
@@ -124,10 +123,10 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
     }
 
     $newItemStatus = $this->determineNewItemStatus($data, $item);
-
-    if ($newItemStatus) {
+    $stopParentUpdate = $data['stopParentUpdate'] ?? null;
+    if ($newItemStatus && !$stopParentUpdate) {
       $repositoryItem = app($item->repository);
-      $repositoryItem->updateBy($item->id, ['status_id' => $newItemStatus]);
+      $repositoryItem->updateBy($item->id, ['status_id' => $newItemStatus, 'isSupplyUpdate' => true]);
       unset($data['item']); // Remove item data from original update
     }
 

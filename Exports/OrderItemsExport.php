@@ -48,7 +48,7 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
     //Init Repo
     $repository = app("Modules\\Iorder\\Repositories\\ItemRepository");
     $this->params->returnAsQuery = true;
-    $this->params->include = ['suppliers.supplier'];
+    $this->params->include = ['suppliers.supplier', 'status'];
     //Get query
     $query = $repository->getItemsBy($this->params);
     //Response
@@ -82,20 +82,6 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
    */
   public function map($item): array
   {
-
-//    'fields' => [
-//    'id',
-//    'product.title',
-//    'suppliers.supplier.first_name',
-//    'suppliers.price',
-//    'suppliers.quantity',
-//    'price',
-//    'quantity',
-//    'status.title',
-//    'suppliers.comment',
-//    'created_at',
-//    'updated_at'
-//  ]
     $suppliers = $item->suppliers->first() ?? null;
 
     $supplier = null;
@@ -112,7 +98,7 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
       $suppliers->quantity ?? null,
       $item->price ?? null,
       $item->quantity ?? null,
-      $item->status->title ?? null,
+      $item->status["title"] ?? $item->status->title ?? null,
       $suppliers->comment ?? null,
       $item->created_at ?? null,
       $item->updated_at ?? null,

@@ -58,7 +58,7 @@ class Supply extends CrudModel
   public function external()
   {
     if (is_module_enabled('Iexternal')) {
-      return $this->hasOne(\Modules\Iexternal\Entities\External::class, 'entity_id', 'supplier_id')
+      return $this->hasOne(\Modules\Iexternal\Entities\External::class, 'entity_id', 'id')
                   ->where('entity_type', '=', "Modules\\User\\Entities\\Sentinel\\User");
     }
     return new EmptyRelation();

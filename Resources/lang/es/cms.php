@@ -13,7 +13,10 @@ return [
     "accept" => "Aceptar",
     "acceptOrder" => "Aceptar Orden",
     "acceptMessage" => "¿Deseas aceptar esta orden?. Por favor, asegúrate que las unidades y el precio sean los correctos.",
-    "suppliesHelp" => "Este módulo te permite gestionar órdenes=> revisa, edita cantidades o precios si es necesario, y decide si aceptarlas o rechazarlas. Asegúrate de verificar los detalles antes de confirmar."
+    "suppliesHelp" => "Este módulo te permite gestionar órdenes=> revisa, edita cantidades o precios si es necesario, y decide si aceptarlas o rechazarlas. Asegúrate de verificar los detalles antes de confirmar.",
+    "externalCreatedAt" => "Generación de Factura en",
+    "pendingMessage" => "¿Estás seguro de que quieres marcar este ítem como pendiente?",
+    "pendingItem" => "Marcar como pendiente"
   ],
   "form" => [
     "order" => "Orden",

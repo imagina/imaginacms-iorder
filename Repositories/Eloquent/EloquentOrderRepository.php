@@ -99,13 +99,15 @@ class EloquentOrderRepository extends EloquentCrudRepository implements OrderRep
   {
     $model = $this->getItem($data['id'], ['include' => ['items']]);
 
-    if ($model->type_id != Type::SUPPLY
-        && !in_array($data['status_id'], [Status::ORDER_INVOICED])) {
+    if ($model->type_id != Type::SUPPLY || !isset($data['status_id'])
+      || !in_array($data['status_id'], [Status::ORDER_CANCELLED, Status::ORDER_COMPLETED, Status::ORDER_TO_BE_ISSUED])) {
       return; // Early return if status is not relevant
     }
 
+    if(isset($data['items'])) unset($data['items']); // Delete always the items
+
     //Ignore other status when is supply type
-    if (in_array($model->status_id, [Status::ORDER_INVOICED])) {
+    if (in_array($model->status_id, [Status::ORDER_TO_BE_ISSUED, Status::ORDER_CANCELLED])) {
       $tmpData = $data;
 
       $data = [
@@ -114,20 +116,32 @@ class EloquentOrderRepository extends EloquentCrudRepository implements OrderRep
       return;
     }
 
-    $status = Status::ITEM_INVOICED;
-    $items = $model->items;
+    $statusMapping = [
+      Status::ORDER_COMPLETED => Status::ITEM_COMPLETED,
+      Status::ORDER_TO_BE_ISSUED => Status::ITEM_TO_BE_ISSUED,
+      Status::ORDER_CANCELLED => Status::ITEM_CANCELLED
+    ];
 
-    if (isset($items)) {
-      $firstItem = $items->first();
-      $repositoryItem = app($firstItem->repository);
+    $orderStatus = $data['status_id'];
+    $status = $statusMapping[$orderStatus] ?? null;
 
-      foreach ($items as $item) {
-        if($item->status_id != Status::ITEM_INVOICED) {
-          $repositoryItem->updateBy($item->id, ['status_id' => $status, 'automatic' => 0]);
+    if (isset($status)) {
+      $items = $model->items;
+
+      if ($items->isNotEmpty()) {
+        $repositoryItem = app($items->first()->repository);
+
+        foreach ($items as $item) {
+          if ($item->status_id === $status) continue;
+
+          $isOrderStatusValid = in_array($orderStatus, [Status::ORDER_TO_BE_ISSUED, Status::ORDER_COMPLETED], true);
+          $shouldUpdate = !$isOrderStatusValid || $item->status_id !== Status::ITEM_CANCELLED;
+
+          if ($shouldUpdate) {
+            $repositoryItem->updateBy($item->id, ['status_id' => $status, 'stopParentUpdate' => true]);
+          }
         }
       }
-
-      if(isset($data['items'])) unset($data['items']);
     }
   }
 }
