@@ -63,6 +63,7 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
   public function headings(): array
   {
     return [
+      '# Orden',
       'id',
       'Producto',
       'Proveedor',
@@ -86,14 +87,15 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
 
     $supplier = null;
     if(isset($suppliers)) {
-      $supplier= $suppliers->supplier->first() ?? null;
+      $supplier = $suppliers->supplier ?? null;
     }
 
     //Map data
     return [
+      $item->orderId ?? $item->order_id ?? null,
       $item->id ?? null,
       $item->title ?? null,
-      isset($supplier) ? $supplier->present()->fullName() : null,
+      isset($supplier) ? $supplier->present()->fullName : null,
       $suppliers->price ?? null,
       $suppliers->quantity ?? null,
       $item->price ?? null,
