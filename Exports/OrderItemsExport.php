@@ -102,8 +102,8 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
       $item->quantity ?? null,
       $item->status["title"] ?? $item->status->title ?? null,
       $suppliers->comment ?? null,
-      $item->created_at ?? null,
-      $item->updated_at ?? null,
+      $item->created_at?->toDateString() ?? null,
+      $item->updated_at?->toDateString() ?? null,
     ];
   }
 
