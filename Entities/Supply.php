@@ -72,7 +72,7 @@ class Supply extends CrudModel
   {
     $response = [];
     $userId = \Auth::id() ?? null;
-    $source = "iorder";
+    $source = "Iorder|Supply";
     $supplier = $this->supplier;
 
     if(!isset($supplier)) return $response;
@@ -80,28 +80,40 @@ class Supply extends CrudModel
     $orderId = $this->item->order->id;
 
     //Validation Event Created
-    if($event=="created"){
+    if($event=="created")
+    {
+      $createdSource = "$source|$event|$orderId|$this->supplier_id";
+      $notification = app('Modules\Notification\Repositories\NotificationRepository');
+      $params = [
+        'include' => ['*'],
+        'filter' => [
+          'field' => 'source'
+        ]
+      ];
+      $sended = $notification->getItem($createdSource, json_decode(json_encode($params)));
+      if ($sended) return $response;
+
       $response[$event] = [
         "title" => trans("iorder::supplies.title.createdEvent"),
         "message" => trans("iorder::supplies.messages.createdEvent", ['userName' => $supplier->first_name, 'id' => $orderId]),
         "email" => [$supplier->email],
         "broadcast" => [$this->supplier_id],
         "userId" => $userId,
-        "source" => $source,
-        "link" => url('/iadmin/#/orders/supplies/index')
+        "source" => $createdSource,
+        "link" => url('/iadmin/#/orders/supplies/index?order.supplies=%7B"orderId":"'. $orderId .'"%7D')
       ];
     }
 
     if($event=="updated") {
-      if (!in_array($this->status_id, [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED])) {
+      if (in_array($this->status_id, [Status::SUPPLY_ACCEPTED, Status::SUPPLY_REFUSED]) && $userId !== $this->supplier_id) {
         $response[$event] = [
           "title" => trans("iorder::supplies.title.updatedEvent",  ['id' => $orderId]),
-          "message" => trans("iorder::supplies.messages.updatedEvent", ['userName' => $supplier->first_name, 'id' => $orderId, 'status' => $this->status['title'] ?? '']),
+          "message" => trans("iorder::supplies.messages.updatedEvent", ['userName' => $supplier->first_name, 'id' => $orderId, 'status' => $this->status['title'] ?? '', 'product' => $this->item->title]),
           "email" => [$supplier->email],
           "broadcast" => [$this->supplier_id],
           "userId" => $userId,
           "source" => $source,
-          "link" => url('/iadmin/#/orders/supplies/index')
+          "link" => url('/iadmin/#/orders/supplies/index?order.supplies=%7B"orderId":"'. $orderId .'"%7D')
         ];
       }
     }

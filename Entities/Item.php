@@ -80,8 +80,9 @@ class Item extends CrudModel
   public function isNotificableParams($event)
   {
     $response = [];
+    if($this->status_id == Status::ITEM_TO_BE_ISSUED) return $response;
     $userId = \Auth::id() ?? null;
-    $source = "iorder";
+    $source = "Iorder|Item";
     $order = $this->order;
 
     if(!isset($order)) return $response;
@@ -92,12 +93,12 @@ class Item extends CrudModel
 
       $response[$event] = [
         "title" => trans("iorder::items.title.updatedEvent",  ['id' => $orderId]),
-        "message" => trans("iorder::items.messages.updatedEvent", ['id' => $orderId, 'status' => $this->status['title'] ?? '']),
+        "message" => trans("iorder::items.messages.updatedEvent", ['id' => $orderId, 'status' => $this->status['title'] ?? '', 'product' => $this->title]),
         "email" => $email,
         "broadcast" => [$order->customer_id],
         "userId" => $userId,
         "source" => $source,
-        "link" => url('/iadmin/#/orders/orders/index')
+        "link" => url('/iadmin/#/orders/orders/index?order.orders=%7B"orderId":"'. $orderId .'"%7D')
       ];
 
       \Log::info('Notification::Item|'. $event .'|IsNotificable: email: ' . $email[0] . ' | broadcast: ' . $order->customer_id);

@@ -27,7 +27,7 @@ return [
     We hope this message finds you well. We want to inform you that a new order with the number #:id has been assigned to you.
     Please click the following link to accept or decline the order:',
     'updatedEvent' => 'Hello :userName,
-    We want to inform you that the status of your order #:id has changed to $:status.',
+We’d like to inform you that the status of your product ":product" in order #:id has been updated to ":status".',
     'orderRemind' => 'We inform you that you have :count pending orders to review. Please log in to the application to verify which ones are still pending review.',
     'adminOrderRemind' => 'We inform you that there are :count orders awaiting supplier response.',
     'checkOrder' => 'We inform you that there are currently :count orders pending your review. You can log into the application to view and manage the pending orders.'

@@ -20,8 +20,8 @@ return [
   ],
   'messages' => [
     'updatedEvent' => 'Hello,
-We would like to inform you that the status of order #:id has been updated to :status.
-For more details, you can review your order information at the following link:'
+We’d like to inform you that the product ":product" from your order #:id has changed status and is now marked as ":status".
+For more details, you can check your order information at the following link:'
   ],
   'validation' => [
   ],
