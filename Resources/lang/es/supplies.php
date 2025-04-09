@@ -27,7 +27,7 @@ return [
     Esperamos que este mensaje te encuentre bien. Queremos informarte que se ha generado una nueva orden con el número #:id a tu nombre.
     Por favor, ingresa al siguiente enlace para aceptar o rechazar la orden:',
     'updatedEvent' => 'Hola :userName,
-    Queremos informarte que el estado de tu orden #:id ha cambiado a :status.',
+Queremos informarte que el estado de tu producto ":product" en la orden #:id ha sido actualizado a ":status".',
     'orderRemind' => 'Te informamos que tienes :count órdenes pendientes de revisión. Por favor, ingresa a la aplicación para verificar cuáles te faltan por revisar.',
     'adminOrderRemind' => 'Te informamos que hay :count órdenes en espera de respuesta por parte del proveedor.',
     'checkOrder' => 'Te informamos que actualmente hay :count órdenes en espera de revisión de tu parte. Puedes ingresar a la aplicación para ver y gestionar las órdenes pendientes.'

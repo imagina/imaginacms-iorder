@@ -19,9 +19,9 @@ return [
   'form' => [
   ],
   'messages' => [
-    'updatedEvent' => 'Hola, 
-    Te informamos que se ha detectado un cambio en el estado de la orden #:id, ahora se encuentra en estado :status.
-    Para más detalles, puedes consultar la información de tu orden en el siguiente enlace:'
+    'updatedEvent' => 'Hola,
+Queremos informarte que el producto ":product" de tu orden #:id ha cambiado de estado y ahora se encuentra en ":status".
+Para más detalles, puedes consultar la información de tu orden en el siguiente enlace:'
   ],
   'validation' => [
   ],
