@@ -27,6 +27,15 @@ return [
           'iorder_syncProduct' => [
             'apiRoute' => '/iproduct/v1/products',
             'sheetName' => 'Product',
+            'requestParams' => [
+              'filter' => [
+                'updatedAt' => [
+                  'where' => 'date',
+                  'operator' => '>=',
+                  'value' => date('Y-m-d')
+                ]
+              ]
+            ],
             'columns' => [
               'id' => 'ID',
               'title' => 'NOMBRE'
