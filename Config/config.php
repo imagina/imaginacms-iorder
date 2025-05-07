@@ -8,7 +8,7 @@ return [
     'entities' => [
       'iorder_syncOrders' => [
         'base_template_id' => '1Iyk9DXPzXbMoXB8BoruKkVidVKDDKCOyRANaLuxpx5I',
-        'apiRoute' => '/iorder/v3/orders',
+        'apiRoute' => '/iorder/v1/orders',
         "supportedActions" =>  ["import"],
         'sheetName' => 'Orders',
         'customColumns' => true,

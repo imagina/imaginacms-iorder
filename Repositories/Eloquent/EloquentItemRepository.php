@@ -114,7 +114,6 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
 
     if ($entityClass->repository === 'Modules\\Iproduct\\Repositories\\ProductRepository') {
       $model->external = $model->external;
-      $model->mediaFiles = $model->mediaFiles();
       unset($model->files);
       $defaultZone = $model->getDefaultZone();
       if ($defaultZone) {
