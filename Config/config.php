@@ -7,7 +7,7 @@ return [
   'synchronizable' => [
     'entities' => [
       'iorder_syncOrders' => [
-        'base_template_id' => '1Iyk9DXPzXbMoXB8BoruKkVidVKDDKCOyRANaLuxpx5I',
+        'base_template_id' => '1kowTPrNc_gjv9AtMw4JswBmLJrIxZwbyaMyNZjQggwE',
         'apiRoute' => '/iorder/v1/orders',
         "supportedActions" =>  ["import"],
         'sheetName' => 'Orders',
@@ -28,13 +28,13 @@ return [
             'apiRoute' => '/iproduct/v1/products',
             'sheetName' => 'Product',
             'requestParams' => [
-              'filter' => [
+              /*'filter' => [
                 'updatedAt' => [
                   'where' => 'date',
                   'operator' => '>=',
                   'value' => date('Y-m-d')
                 ]
-              ]
+              ]*/
             ],
             'columns' => [
               'id' => 'ID',
