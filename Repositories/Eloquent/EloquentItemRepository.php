@@ -155,7 +155,7 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
     }
 
     //Ignore other status when is supply type
-    if (!in_array($order->status_id, [Status::ORDER_PENDING, Status::ORDER_IN_PROGRESS])) {
+    if (!in_array($order->status_id, [Status::ORDER_PENDING, Status::ORDER_IN_PROGRESS]) && !in_array($model->status_id, [Status::ITEM_PENDING, Status::ITEM_PENDING_REVIEW])) {
       $tmpData = $data;
 
       $data = [

@@ -136,7 +136,8 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
   {
     switch ($data['status_id']) {
       case Status::SUPPLY_ACCEPTED:
-        if ($data['price'] == $item->price && $data['quantity'] == $item->quantity) {
+        $stopParentUpdate = $data['stopParentUpdate'] ?? false;
+        if (($data['price'] == $item->price && $data['quantity'] == $item->quantity) || $stopParentUpdate) {
           return Status::ITEM_COMPLETED;
         } else {
           $data['status_id'] = Status::SUPPLY_MODIFIED;
