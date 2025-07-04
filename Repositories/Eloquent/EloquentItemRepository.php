@@ -49,6 +49,16 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
      *
      */
 
+    if (isset($filter->customCreatedAt)) {
+      $date = $filter->customCreatedAt;
+      $query->whereHas('order', function ($query) use ($date) {
+        if (isset($date->from))//From a date
+          $query->whereDate($date->field, '>=', $date->from);
+        if (isset($date->to))//to a date
+          $query->whereDate($date->field, '<=', $date->to);
+      });
+    }
+
     //Response
     return $query;
   }

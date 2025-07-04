@@ -17,7 +17,7 @@ class Order extends CrudModel
     'items' => [
       'relation' => 'hasMany',
       'type' => 'updateOrCreateMany',
-      'compareKeys' => ['entity_type','entity_id']
+      'compareKeys' => ['entity_type','entity_id', 'options']
     ]
   ];
   static $dynamicTraits = ['Modules\Iexternal\Traits\HasExternal'];
@@ -58,6 +58,7 @@ class Order extends CrudModel
     'options',
     'payment_name',
     'shipping_name',
+    'custom_created_at',
     'type_id'
   ];
   protected $casts = [
@@ -80,4 +81,14 @@ class Order extends CrudModel
   {
     return $this->hasMany(Item::class);
   }
+
+  public function getSupplyTotalAttribute()
+  {
+    return $this->items->sum(function ($item) {
+      return $item->suppliers->sum(function ($supply) {
+        return $supply->supply_total;
+      });
+    });
+  }
+
 }

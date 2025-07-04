@@ -7,15 +7,15 @@ return [
   'synchronizable' => [
     'entities' => [
       'iorder_syncOrders' => [
-        'base_template_id' => '1kowTPrNc_gjv9AtMw4JswBmLJrIxZwbyaMyNZjQggwE',
+        'base_template_id' => '1zjXQKs7DIPiN51wu-n_asQuEkiErn5FVKaEjANn25pI',
         'apiRoute' => '/iorder/v1/orders',
         "supportedActions" =>  ["import"],
-        'sheetName' => 'Orders',
+        'sheetName' => 'Órdenes',
         'customColumns' => true,
         'dependencies' => [
           'iorder_syncProvider' => [
             'apiRoute' => '/profile/v1/users',
-            'sheetName' => 'Provider',
+            'sheetName' => 'Proveedor',
             'requestParams' => [
               'filter' => ['roleId' => 6]
             ],
@@ -26,7 +26,7 @@ return [
           ],
           'iorder_syncProduct' => [
             'apiRoute' => '/iproduct/v1/products',
-            'sheetName' => 'Product',
+            'sheetName' => 'Producto',
             'requestParams' => [
               /*'filter' => [
                 'updatedAt' => [
