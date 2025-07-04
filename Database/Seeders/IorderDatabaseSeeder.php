@@ -3,6 +3,8 @@
 namespace Modules\Iorder\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Isite\Jobs\ProcessSeeds;
 
 class IorderDatabaseSeeder extends Seeder
 {
@@ -11,6 +13,10 @@ class IorderDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+      Model::unguard();
+      ProcessSeeds::dispatch([
+        'baseClass' => "\Modules\Iorder\Database\Seeders",
+        'seeds' => ['FillCustomCreatedAtSeeder'],
+      ]);
     }
 }
