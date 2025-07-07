@@ -48,7 +48,7 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
     //Init Repo
     $repository = app("Modules\\Iorder\\Repositories\\ItemRepository");
     $this->params->returnAsQuery = true;
-    $this->params->include = ['suppliers.supplier', 'status'];
+    $this->params->include = ['suppliers.supplier', 'status', 'order'];
     //Get query
     $query = $repository->getItemsBy($this->params);
     //Response
@@ -73,8 +73,7 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
       'Unidades Solicitadas',
       'Estado',
       'Observaciones',
-      'Fecha de Creación',
-      'Fecha Ultima Actualización'
+      'Fecha de Creación'
     ];
   }
 
@@ -102,8 +101,7 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
       $item->quantity ?? null,
       $item->status["title"] ?? $item->status->title ?? null,
       $suppliers->comment ?? null,
-      $item->created_at?->toDateString() ?? null,
-      $item->updated_at?->toDateString() ?? null,
+      $item->order->custom_created_at ?? null,
     ];
   }
 

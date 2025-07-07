@@ -64,6 +64,11 @@ class Supply extends CrudModel
     return new EmptyRelation();
   }
 
+  public function getSupplyTotalAttribute()
+  {
+    return $this->price * $this->quantity;
+  }
+
   /**
    * Make Notificable Params | to Trait
    * @param $event (created|updated|deleted)
