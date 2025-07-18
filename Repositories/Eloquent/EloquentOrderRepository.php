@@ -49,6 +49,12 @@ class EloquentOrderRepository extends EloquentCrudRepository implements OrderRep
      *
      */
 
+    if (isset($filter->search) && !empty($filter->search)) {
+      $orderId = preg_replace('/\D/', '', $filter->search);
+      $query->orWhere('id', 'like', '%' . $orderId . '%');
+      $query->orderBy('id', 'asc');
+    }
+
     $this->validateIndexAllPermission($query, $params);
     //Response
     return $query;

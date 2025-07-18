@@ -1,12 +1,14 @@
 {
-    "name": "vendor/iorder",
+    "name": "imagina/iorder-module",
     "description": "",
     "type": "asgard-module",
     "license": "MIT",
     "require": {
         "php": "^7.1.3",
         "composer/installers": "~1.0",
-        "idavoll/core-module": "v8.x-dev"
+        "imagina/core-module": "v10.x-dev",
+        "imagina/iexternal-module": "v10.x-dev",
+        "imagina/notification-module": "v10.x-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",
@@ -21,12 +23,15 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "authors": [
-        {
-            "name": "Nicolas Widart",
-            "email": "n.widart@gmail.com"
-        }
+      {
+        "name": "Imagina Colombia",
+        "email": "proyectos@imaginacolombia.com"
+      }
     ],
     "extra": {
+        "branch-alias": {
+          "dev-v10.x": "10.0.x-dev"
+        },
         "laravel": {
             "providers": [],
             "aliases": {
