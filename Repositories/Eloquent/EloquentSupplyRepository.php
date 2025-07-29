@@ -123,6 +123,12 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
     }
 
     $newItemStatus = $this->determineNewItemStatus($data, $item);
+
+    if ($newItemStatus == Status::ITEM_CANCELLED) {
+      $data['price'] = 0;
+      $data['quantity'] = 0;
+    }
+
     $stopParentUpdate = $data['stopParentUpdate'] ?? null;
     if ($newItemStatus && !$stopParentUpdate) {
       $repositoryItem = app($item->repository);

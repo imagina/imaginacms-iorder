@@ -48,7 +48,7 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
     //Init Repo
     $repository = app("Modules\\Iorder\\Repositories\\ItemRepository");
     $this->params->returnAsQuery = true;
-    $this->params->include = ['suppliers.supplier', 'status', 'order'];
+    $this->params->include = ['suppliers.supplier', 'status', 'order.external'];
     //Get query
     $query = $repository->getItemsBy($this->params);
     //Response
@@ -64,6 +64,7 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
   {
     return [
       '# Orden',
+      '# Orden Alegra',
       'id',
       'Producto',
       'Proveedor',
@@ -89,9 +90,12 @@ class OrderItemsExport implements FromQuery, WithEvents, ShouldQueue, WithMappin
       $supplier = $suppliers->supplier ?? null;
     }
 
+    $alegraNumber = data_get($item, 'order.external.options.numberTemplate.fullNumber', '');
+
     //Map data
     return [
       $item->orderId ?? $item->order_id ?? null,
+      $alegraNumber,
       $item->id ?? null,
       $item->title ?? null,
       isset($supplier) ? $supplier->present()->fullName : null,
