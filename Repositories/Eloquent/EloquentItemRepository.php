@@ -219,7 +219,6 @@ class EloquentItemRepository extends EloquentCrudRepository implements ItemRepos
         $changeStatus = $this->checkItemsStatus($data['id'], $order, Status::ITEM_COMPLETED);
 
         if ($changeStatus) $orderStatus = Status::ORDER_IN_PROGRESS;
-        else $orderStatus = Status::ORDER_COMPLETED;
 
         //TODO: Change this for specific supplies, because its necesary reject the other supplies or analyze the logic
         $supplyStatus['all'] = Status::SUPPLY_ACCEPTED;

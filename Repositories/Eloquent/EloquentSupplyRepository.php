@@ -54,6 +54,16 @@ class EloquentSupplyRepository extends EloquentCrudRepository implements SupplyR
       });
     }
 
+    if (isset($filter->customCreatedAt)) {
+      $date = $filter->customCreatedAt;
+      $query->whereHas('item.order', function ($q) use ($date) {
+        if (isset($date->from))//From a date
+          $q->whereDate($date->field, '>=', $date->from);
+        if (isset($date->to))//to a date
+          $q->whereDate($date->field, '<=', $date->to);
+      });
+    }
+
 
     $this->validateIndexAllPermission($query, $params);
     //Response
